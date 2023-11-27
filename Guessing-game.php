@@ -4,7 +4,7 @@ if ( isset($_GET["clear"])) {
     if(isset($_COOKIE["guess-target"])) {
         setcookie("guess-target", "", time() - 100);
         setcookie("user-name" ,   "", time() - 100);
-        header("Location: http://localhost/Cookies-practise/Cookie-practise/");
+        header("Location: http://localhost/Cookies-practise/Cookie-practise/Guessing-game.php");
         die();
     }
 }
@@ -21,29 +21,46 @@ if ( isset($_GET["clear"])) {
 <body>
 
 <?php
-
+    $seconds_in_one_day = 60 * 60 * 24;
 if ( ! isset($_COOKIE["guess-target"])) {
-
+    $num = rand(0,100);
     echo "Welcome to the number guessing game!";
     echo "<br>";
     echo "Cookie is not set!";
 
-    $seconds_in_one_day = 60 * 60 * 24;
-    setcookie("guess-target", "13" ,   time() + $seconds_in_one_day);
+
+    setcookie("guess-target", $num ,   time() + $seconds_in_one_day);
     setcookie("user-name",    "John" , time() + $seconds_in_one_day);
     die();
 
 } else {
+
     echo "Cookie is set!";
     echo "<br>";
     echo "Value is: " . $_COOKIE["guess-target"];
     echo "<br>";
     echo "<a href='Guessing-game.php?clear=1'>remove cookie</a>";
 
+    if (isset($_POST["guess"])) {
+        if ($_POST["guess"] == $_COOKIE["guess-target"]) {
+            echo"<h1>correct<h1>";
+            $num = rand(0,100);
+            setcookie("guess-target" , $num , time() + $seconds_in_one_day);
+
+
+        } elseif ($_POST["guess"] <= $_COOKIE["guess-target"]) {
+            echo "The target is higher";
+
+        } elseif ($_POST["guess"] >= $_COOKIE["guess-target"]) {
+            echo "The target is lower";
+
+        };
+    };
+
 };
 ?>
 
-<form name="guess">
+<form name="guess" method="POST">
      <input type="text" id="guess" name="guess"><br><br>
      <input type="submit" value="Submit">
 </form>
